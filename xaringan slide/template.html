@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Customize Shiny UI with HTML and CSS</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Zhihao Lyu" />
+    <script src="libs/header-attrs-2.11/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <script src="libs/fabric-4.3.1/fabric.min.js"></script>
+    <link href="libs/xaringanExtra-scribble-0.0.1/scribble.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-scribble-0.0.1/scribble.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', function() { window.xeScribble = new Scribble({"pen_color":["#FF0000"],"pen_size":3,"eraser_size":30,"palette":[]}) })</script>
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+    <link rel="stylesheet" href="mystyle.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+layout: true
+background-image: url("https://uc.wisc.edu/content/uploads/2020/05/UW-Webex_Bkgrnd-6.jpg")
+
+---
+class: bottom, my_title
+
+
+
+`\(\def\Dir{\text{Dir}}\)`
+`\(\def\Mult{\text{Mult}}\)`
+`\(\def\*#1{\mathbf{#1}}\)`
+`\(\def\m#1{\boldsymbol{#1}}\)`
+`\(\def\Unif{\text{Unif}}\)`
+`\(\def\win{\tilde{w}_{\text{in}}}\)`
+`\(\def\reals{\mathbb{R}}\)`
+`\(\newcommand{\wout}{\tilde w_{\text{out}}}\)`
+
+
+
+
+## Customize Shiny User Interface with HTML and CSS
+
+
+.pull-left[
+January 23, 2022
+
+Group Meeting - Computation Tutorial
+]
+ 
+.pull-right[
+Zhihao Lyu
+
+Department of Statistics
+
+[zlyu48@wisc.edu](mailto:zlyu48@wisc.edu)
+]
+
+---
+## Table of Contents
+.small[
+- [Embedding HTML/CSS into Markdown for Customization](https://alexhaoge.xyz/data/mdcustom.html)
+- [HTML Basics](#6)
+- [Using HTML in Shiny](#10)
+  - With `htmltools` -  [example](http://www.alexhaoge.xyz:3838/htmlcss/)
+  - HTML Templates - [example1](http://www.alexhaoge.xyz:3838/htmltemplateexp1/) [example2](http://www.alexhaoge.xyz:3838/htmltemplateexp2/)
+- [CSS Basics](#14)
+- [Using CSS in Shiny](#25) - [example](http://www.alexhaoge.xyz:3838/htmlcss/)
+- [Importing External CSS and JavaScript Dependencies](#26)
+  - [Example](http://www.alexhaoge.xyz:3838/jscssimport/)
+- [Bootstrap - Easy Way to Write Beautiful UI](#27)
+  - [bslib - Change Boostrap Version and Customize Theme](#30)
+  - [Video](https://www.youtube.com/watch?v=YJCgUe5SS9M)
+- [An even easier solution!](#33)
+  - [Example](http://www.alexhaoge.xyz:3838/easysol/) and [Video](https://www.youtube.com/watch?v=w-TnXXt9d2k)
+- [Browser Developer Tools](#35)
+- [Reference](#37)
+]
+- [All codes and slides is on Github](https://github.com/Alexhaoge/Customize-Shiny-with-HTML-CSS)
+---
+
+## How do I...
+- Change font/image size in Rmarkdown?
+- Set a centering caption/images in Rpresentation or Xaringan?
+- in Shiny,
+  + Customize a theme?
+  + Write more complex and flexible layout?
+  + Use a fancy template?
+  + Import UI and format library written by someone else?
+
+.large[You need &lt;span style="color:red"&gt;Hyper Text Markup Languange&lt;/span&gt; and  
+&lt;span style="color:red"&gt;Cascading Style Sheets&lt;/span&gt;!]
+---
+## What are HTML &amp; CSS?
+.small[
+- The standard markup language for creating Web pages
+  - HTML describe the structure of a web page with **nested, multilevel "tags"**
+  - CSS adds **multilevel format** to HTML, in form of "selector+declaration"
+- All Markdown-like files will be rendered to HTML before displaying, so actually **Markdown is HTML**! (For more, check [this page](https://alexhaoge.xyz/data/mdcustom.html))
+]
+```Markdown
+![Picture](Pic.svg){width="800" height="600" style="display: block; margin: 0 auto"}
+```
+```HTML
+&lt;img src="Pic.svg" 
+      alt="Picture" 
+      width="800" 
+      height="600" 
+      style="display: block; margin: 0 auto" /&gt;
+```
+---
+## HTML in Shiny
+```R
+&gt; h1("Hello world")
+&lt;h1&gt;Hello world&lt;/h1&gt;
+```
+&lt;img src="https://unleash-shiny.rinterface.com/images/survival-kit/shinyapp-lifecycle.png" width="90%" height="350rem"/&gt;
+
+---
+## What is HTML
+HTML Skeleton
+```HTML
+&lt;!DOCTYPE HTML&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;!-- head content here --&gt;
+    &lt;title&gt;A title&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;p&gt;Hello World&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+```
+
+[What it looks like in a simple Shiny App](http://www.alexhaoge.xyz:3838/sample-apps/hello/)
+
+---
+## What is HTML -  Tags
+.pull-left[
+- Tags can be divided into
+  - Paired tags like `&lt;tag ...&gt;...&lt;/tag&gt;`
+  - Self-closing tags like `&lt;tag ... /&gt;`
+]
+
+.pull-right[
+![](img/anatomy-of-an-html-element.png)
+]
+
+- Tag attributes
+  - **class** &amp; **id**: locators for a tag. **class** can be shared across multiple tags while **id** should be unique
+  - **style**: inline css formatting
+  - tag-specific attributes: like `src` and `width` in `img` tag, usually functional
+  - non-standard attributes: like `data-toggle` in Bootstrap4.
+
+---
+### Common HTML Tags - Basics
+Complete HTML element reference: [https://www.w3schools.com/tags/default.asp](https://www.w3schools.com/tags/default.asp)  
+.small[
+|Tag|Description|Self-closing|
+|:---:|:---:|:---:|
+| h1 to h6 | Headings | |
+| p | Paragraph | |
+| br | single line break | Yes |
+| hr | a seperator line | Yes |
+| a | hyperlink | |
+| div | define a non-semantic element wrapper (for formatting) | |
+| span | define a non-semantic text wrapper (for formatting) | |
+| `&lt;!--...--&gt;` | write comment inside | Yes |
+| img | image | Yes |
+| iframe | embed another frame(external website, video, pdf,...) | |  
+]
+---
+### Common HTML Tags - Continued
+.small[
+|Tag|Description| |
+|:---:|:---:|:---:|
+| table,tr,td,... | insert a table | |
+| ul/ol | insert a un-ordered/ordered list| |
+| li | insert a list item | |
+| b, strong, i, small, sub, sup | text formatting | |
+| form, input, textarea, button, select, label, ...| insert a form | |
+| link | link a external script in the head, usually css file | |
+| style | write a block of css inside HTML | |
+| script | insert an inline or external JavaScript | |
+]
+---
+## Using HTML in Shiny
+There are mainly three ways to use HTML for Shiny UI:
+- **htmltools (highly recommend)**: the R package Shiny UI based on. Provide R function that generate HTML tags
+
+- Native HTML: write native HTML code inside `HTML()`
+
+- Fill in HTML template: use external HTML files, set placeholder inside HTML file, and use `htmlTemplate()` to fill shiny widgets inside HTML template.
+
+---
+### Writing tags with `htmltools`
+.small[`htmltools` implement all HTML tags. Commonly used tags are exported so you can access their R function with name directly. Less commonly used function should be called by `tags$tagname`, for example `tags$iframe`. Attributes of tags can all be passed by ]
+```R
+withTags({
+  div(class="header", checked=NA,
+    p("Ready to take the Shiny tutorial? If so"),
+    a(href="shiny.rstudio.com/tutorial", "Click Here!")
+  )
+})
+## &lt;div class="header" checked&gt;
+##   &lt;p&gt;Ready to take the Shiny tutorial? If so&lt;/p&gt;
+##   &lt;a href="shiny.rstudio.com/tutorial"&gt;Click Here!&lt;/a&gt;
+## &lt;/div&gt; 
+```
+---
+### Native HTML
+You can always add `HTML("html script...")` to shinyUI. However, it is better to use R only rather than mixing up.
+- functions in `htmltools` return a `shiny.tag` class that have more tags manipulation methods.
+- `htmltools` provides validation to some attributes and css.
+```R
+tags$div(
+  HTML("&lt;strong&gt;Raw HTML!&lt;/strong&gt;")
+)
+## &lt;div&gt;&lt;strong&gt;Raw HTML!&lt;/strong&gt;&lt;/div&gt; 
+```
+There is a [tool](https://alandipert.shinyapps.io/html2r/) that translate HTML into R.
+---
+### HTML template
+.small[
+.pull-left[
+```HTML
+&lt;!DOCTYPE html&gt;
+&lt;!-- template.html --&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    {{ headContent() }}
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div&gt;
+      {{ button }}
+      {{ slider }}
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+```]
+.pull-right[
+```R
+## ui.R ##
+htmlTemplate("template.html",
+  button = actionButton("action", "Action"),
+  slider = sliderInput("x", "X", 1, 100, 50)
+)
+```
+]
+
+Packages can use HTML templates for components. If you have a package named `mypackage` and have a template file in the package sources at `inst/templates/component.html`, you can access that file with:]
+```R
+system.file("templates", "component.html", package = "mypackage")
+```
+---
+## What is CSS?
+
+- syntax of CSS
+.pull-right[![](https://www.w3schools.com/Css/img_selector.gif)]
+
+&lt;!-- The selector points to the HTML element you want to style. --&gt;
+&lt;!-- The declaration block contains one or more declarations separated by semicolons. --&gt;
+&lt;!-- Each declaration includes a CSS property name and a value, separated by a colon. --&gt;
+&lt;!-- Multiple CSS declarations are separated with semicolons, and declaration blocks are surrounded by curly braces. --&gt;
+
+- three ways of including CSS in HTML:
+  - inline css with `style` attribute (highest priority)
+```HTML
+&lt;p style="color: red"&gt;Hello World&lt;/p&gt;
+```
+  - add a `style` tag in the head/an element (latter overrides the former)
+```HTML
+&lt;style type="text/css"&gt; p { color: red; } &lt;/style&gt;
+```
+  - import an external css with `link` (latter overrides the former)
+```HTML
+&lt;link rel="stylesheet" href="style.css" /&gt;
+```
+---
+## CSS Selector
+.small[
+
+| Selector           | Example    | Example description                             |
+|--------------------|------------|-------------------------------------------------|
+| #id                | #firstname | Selects the element with id="firstname"         |
+| .class             | .intro     | Selects all elements with class="intro"         |
+| element.class      | p.intro    | Selects only `&lt;p&gt;` elements with class="intro"    |
+| *                  | *          | Selects all elements                            |
+| element            | p          | Selects all `&lt;p&gt;` elements                        |
+| element,element,.. | div, p     | Selects all `&lt;div&gt;` elements and all `&lt;p&gt;` elements |
+| element1 element2 | div p | Select all `&lt;p&gt;` inside `&lt;div&gt;`|
+]
+---
+## CSS Selector - Advanced
+.small[
+select by attribute
+```HTML
+&lt;a data-toggle="whatever"&gt;Tag&lt;/a&gt;
+a[data-toggle="dropdown"] { color: red; } 
+a[data-toggle*="dropdown"] { color: red; }
+```
+]
+.underline[[Direct descendants](https://unleash-shiny.rinterface.com/beautify-css.html#direct-descendants)]
+In multilevel CSS, all the descendants that statistfy the locator will be formatted. If you want the rules only affects direct children, 
+```CSS
+.navbar-nav &gt; li &gt; a { ... } // This will will not affect &lt;li&gt;&lt;div&gt;&lt;a&gt;&lt;/a&gt;&lt;/div&gt;&lt;/li&gt;
+```
+Psuedo class
+```CSS
+a:visited { color:red } // All the hyperlink you have clicked will be in red
+```
+---
+### CSS Basics - Box Model
+![](img/boxmodel.png)
+---
+### CSS Basics - Size
+.small[
+.pull-left[
+- `width/height: 3rem/auto/initial/inherit/100%` declare the content size
+- `border-left/right/bottom/top: 3rem` declare one side of the border/margin/padding
+- `border: 3rem` declare all the four side of border/margin/padding
+- `bordier-radius: 1rem` will result in a round corner of the border
+- valid values:
+  - `initial`: default
+  - `inherit`: same as parent element
+  - **`80%`: means 80% from the parent element**
+  - better not use `unset/auto`
+  - **`3rem/2px/1cm`: a specific length**
+]
+.pull-right[
+Length Unit
+- Absolute
+    - px(pixels), cm, mm, in, pt(1/72 inch), pc(12pt)
+- Relative (Strongly Recommended)
+    - em:   Relative to the font-size of the element
+    - **rem (strongly recommend)**:  Relative to font-size of the root element
+    - **vw**:   Relative to 1% of the width of the viewport
+    - **vh**:   Relative to 1% of the height of the viewport
+    - **50%**:  Relative to 50% of parent element
+]
+]
+
+---
+### CSS Basics - Color
+```HTML
+&lt;div style="background-color=green"&gt;
+  &lt;div style="margin: 1rem;
+    border:0.5rem; border-style:dotted; border-color: yello;
+    padding: 1rem; background-color: blue"&gt;
+    &lt;p style="color:red; background-color:black"&gt;Hello World&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+```
+&lt;div style="background-color:green"&gt;
+  &lt;div style="margin: 1rem;
+    border:0.5rem; border-style:dotted; border-color: yello;
+    padding: 1rem; background-color: blue"&gt;
+    &lt;p style="color:red; background-color:black"&gt;Hello World&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+.small[
+What's happening: `div` in the middle have a 1rem margin. The margin area does not belongs to the middle `div` but its father element so it has a green background. A 0.5rem wide dotted yello border. A 1rem padding belongs to the middle `div` so it has a blue background. The inside `p` has red text color and black background.
+]
+---
+### CSS Basics - color
+- Possible color value
+  - names, like blue,red,...
+  - HEX value #000000(black)
+  - rgb(0-255,0-255,0-255)
+  - rgba(0-255,0-255,0-255,0-1) the last define opacity
+- CSS named colors: [https://www.w3schools.com/cssref/css_colors.asp](https://www.w3schools.com/cssref/css_colors.asp)
+- RGB color picker: [https://www.rapidtables.com/web/color/RGB_Color.html](https://www.rapidtables.com/web/color/RGB_Color.html)
+
+---
+### CSS Basics - Text
+- `text-align: center/left/right;` align the text to center, left or right. Note that this only works for block element
+
+### Block v.s. inline
+- Block element takes up a whole row while inline element fit into a line.
+- You can force an element to be block or inline using `display` option in CSS
+---
+![](img/normal-flow-layout.png)
+---
+### CSS Basics - Display
+- `display: block/inline/none/flex` Change display format
+  - `none` the element will not shown and **do not take up any space**
+  - `flex` flex layout (see next page)
+- `visibility: hidden` The element will not shown but still take up the same space.
+
+### CSS Basics - Position
+- Sometimes if you do not want the element to locate in their layout position, you can manully adjust their position
+- position: static/relative/fixed/absolute/sticky
+  - `static` means default, `relative` means relative to static, `absolute` means relative to viewpoint
+- top/bottom/right/left: used for relative/fixed/absolute/sticky
+---
+### CSS Basics - Flex
+.small[
+- Flex layout help you arrange multiple element more easily and avoid hard-code, absolute position.
+- [https://www.w3schools.com/Css/css3_flexbox_container.asp](https://www.w3schools.com/Css/css3_flexbox_container.asp)
+
+| Property        | Description                                                                                                                             |
+|-----------------|-----------------------------------------------------------------------------------------------------------------------------------------|
+| align-content   | Modifies the behavior of the flex-wrap property. It is similar to align-items, but instead of aligning flex items, it aligns flex lines |
+| align-items     | Vertically aligns the flex items when the items do not use all available space on the cross-axis                                        |
+| display         | Specifies the type of box used for an HTML element                                                                                      |
+| flex-direction  | Specifies the direction of the flexible items inside a flex container                                                                   |
+| flex-flow       | A shorthand property for flex-direction and flex-wrap                                                                                   |
+| flex-wrap       | Specifies whether the flex items should wrap or not, if there is not enough room for them on one flex line                              |
+| justify-content | Horizontally aligns the flex items when the items do not use all available space on the main-axis                                       |
+]
+---
+## Using CSS in Shiny
+.small[
+- Block CSS. If it is inside an element, the format scope is the element. If it is inside `tags$head`, the scope will be the entire HTML page.
+
+```R
+ui &lt;- fluidPage(
+  tags$style( "p, div { color: red; }" ),
+  p("Hello World"))
+  
+ui &lt;- fluidPage(
+  tags$head(tags$style( "p, div { color: red; }" )),
+  p("Hello World"))
+```
+- Inline CSS
+
+```R
+div(style=css(color="red"))
+```]
+
+---
+## Using CSS in Shiny - Add External CSS stylesheet/JavaScript
+.small[
+- [https://unleash-shiny.rinterface.com/htmltools-dependencies.html](https://unleash-shiny.rinterface.com/htmltools-dependencies.html)
+- It is better to declare css as a dependency using `htmlDependency()`, especially for package. When other people use your UI and come across conflicts, they can call `suppressDependencies()` to remove your dependency.
+```R
+htmlDependency(
+  name = "mdb-card",
+  version = "1.0",
+  src = c(href = "https://cdnjs.cloudflare.com/ajax/libs/"),
+  stylesheet = "mdb-ui-kit/3.6.0/mdb.min.css"
+)
+```
+- In the example above, the `href` is usually a cdn link and `stylesheet` is the path to exact file. But usually that is a must as long as `href` + `stylesheet` is the exact URL to your css file.
+- The link to the file can either be a http link, or a local file. For local file in a package, remember to use `system.file()` to find file path dynamically.
+]
+---
+
+## An Easy Way of Formatting - Boostrap
+.small[
+- Bootstrap is a famous user interface library.
+- It provides you with widgets like navbar, breadcrumbs, jumbotron, pagination, page headers, alerts, progress bars....
+- It is **responsive** to user screen so you don't need to worry about your page distort or overflow on a different size screen.
+- Shiny use Bootstrap v3.x to build UI. The grid layout concept and many UI functions like `fluidPage` and `modalDialog` comes from Bootstrap.
+- It is so easy to use: Most of widget declaration and format control are done simply by **adding keywords to the `class` attribute of HTML tags**!
+  - In HTML
+```HTML
+&lt;div class="alert alert-warning" role="alert"&gt;A warning alert by bootstrap&lt;/div&gt;
+```
+  - In R
+```R
+div(class="alert alert-warning", "A warning alert by bootstrap")
+```]
+- For widgets, see the [official documentation](https://getbootstrap.com/docs/4.6/components/alerts/)
+---
+### Bootstrap Layout - Grid System
+.small[
+Bootstrap layout consists of  
+- container/container-fluid: define a area of layout
+- row: insider a container, takes 100% width of its father element
+- column: each row has 12 columns and we define the layout of a element by the number of column it takes
+- `.col-xs-`, `.col-sm-`, `.col-md-`, `.col-lg-` + numbers means how many number of column a element will take, when the screen is extra small(phones), small(tables), medium(small desktop screen like laptop) and large(big desktop screen).
+- You can define any of 4 above, the element in the screen smaller than your definition will take up 12 columns, and in the screen bigger than your definition will take the columns number defined in the biggest screen, for example
+```R
+div(class="col-sm-8 col-md-6")
+```
+Will take 12 columns on extra small, 8 columns on small, 6 columns on middle and large. ]
+---
+### Bootstrap CSS Helper
+- Bootstrap also provide format helper, you can define some common format by adding corresponding class name. For example, for a error message, you can change its background color to red by
+```HTML
+&lt;p class="bg-danger"&gt;error message&lt;/p&gt;
+```
+- In Bootstrap 4.x, there are even more helper like you can define margin and padding length by adding class name `m-3 p-2`. However, Shiny use Bootstrap 3 by default. To change Bootstrap version, we need `bslib` package
+- Reference to CSS helper: [Bootstrap3](https://getbootstrap.com/docs/3.4/css/#helper-classes) [Bootstrap4](https://getbootstrap.com/docs/4.6/utilities/borders/)
+---
+## bslib - Change Bootstrap Version
+[bslib](https://rstudio.github.io/bslib/) helps you define the `theme` option in shiny UI. It is very simple to change Bootstrap version with bslib
+```R
+library(shiny)
+library(bslib)
+ui &lt;- fluidPage(
+  theme = bs_theme(version = 4),
+  ...
+)
+shinyApp(ui, function(...) {})
+```
+---
+## bslib - Define Bootstrap Theme by yourself
+.small[
+[https://rstudio.github.io/bslib/articles/bslib.html](https://rstudio.github.io/bslib/articles/bslib.html)
+It can be overwhelming if you are change css color in every element. To design a customized theme
+.pull-left[
+First use real-time theming tools by calling `bslib::bs_theme_preview()`
+![](https://i.imgur.com/KLKy1s0.gif)
+]
+.pull-right[
+After you get a satisfied theme, some code will show on the console
+```R
+bs_theme_update(theme, bg="black", ...)
+```
+put the stuff after "theme" into the original `bs_theme`
+```R
+ui &lt;- fluidPage(
+  theme = bs_theme(bg="black", ...), 
+  ...
+)
+```
+]
+
+Note that not all plots can change, only base R, ggplot2, DT and `plotly::ggplotly()` are supported. Also, you need to use `thematic` package and call `thematic_shiny()` before calling `shinyApp`.
+]
+---
+&lt;iframe src="https://www.youtube.com/embed/YJCgUe5SS9M" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen  style="width: 100%; aspect-ratio: 16 / 9;"&gt;&lt;/iframe&gt;
+---
+## An even easier solution
+1. Use Online Bootstrap Builders to build your bootstrap UI without writing any code, and leave place holder for your shiny output.
+  - [https://www.layoutit.com/build](https://www.layoutit.com/build)
+  - [https://bootsnipp.com/builder](https://bootsnipp.com/builder)
+2. Download the HTML file generated. You may need to adjust the HTML a bit like filling in pictures and adjust css of a single element.
+3. Use `htmlTemplate` in Shiny to render UI and bslib to configure bootstrap version 4 and change theme.
+
+---
+&lt;iframe src="https://www.youtube.com/embed/w-TnXXt9d2k" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width: 100%; aspect-ratio: 16 / 9;"&gt;&lt;/iframe&gt;
+---
+## Browser Developer Tool
+&lt;iframe src="https://www.youtube.com/embed/zPpYGc8qs_I" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width: 75%; aspect-ratio: 16 / 9;"&gt;&lt;/iframe&gt;
+---
+&lt;h2 style="text-align: center; margin-top:15rem;"&gt;Thank You!&lt;/h2&gt;
+
+.center[Questions?]
+
+.center[Feedback Form: .form-link[[https://forms.gle/k1rS7bzKZxxE4Mx47](https://forms.gle/k1rS7bzKZxxE4Mx47)]]
+
+---
+## References
+
+- [Outstanding User Interfaces with Shiny](https://unleash-shiny.rinterface.com/index.html)
+- [Shiny - Customize your UI with HTML](https://shiny.rstudio.com/articles/html-tags.html)
+- [Shiny - HTML Templates](https://shiny.rstudio.com/articles/templates.html)
+- [W3Schools - HTML](https://www.w3schools.com/html/default.asp)
+- [W3Schools - CSS Tutorial](https://www.w3schools.com/Css/default.asp)
+- [Bootstrap Official Documentation](https://getbootstrap.com/docs/4.6/getting-started/introduction/)
+- [Shiny - Build a dynamic UI that reacts to user input](https://shiny.rstudio.com/articles/dynamic-ui.html)
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "monokai",
+"highlightLines": true,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
