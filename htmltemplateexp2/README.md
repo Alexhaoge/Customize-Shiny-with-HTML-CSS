@@ -1,0 +1,1 @@
+This is a more complex template and our goal is to replace one panel card with our plot output from R. To locate the card, we need to use the inspector in browser developer tools.

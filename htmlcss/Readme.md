@@ -1,0 +1,1 @@
+This example contains several ways to customize Shiny user interface with HTML/CSS, including using tags function in `htmltools`, writing native HTML, adding block css in the HTML head, and adding inline css.

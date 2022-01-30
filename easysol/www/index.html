@@ -1,0 +1,99 @@
+<ul class="nav navbar bg-dark">
+			  <li class="nav-item">
+			    <a class="navbar-brand" href="#">
+            <img src="img/uw-crest-web.svg" 
+              width="30" height="30" alt="UWlogo">
+          </a>
+			  </li>
+				<li class="nav-item">
+					<a class="nav-link active" href="#inputcard">Plots</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#howto">Getting Started</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#about">About</a>
+				</li>
+			</ul>
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="jumbotron">
+				<h2>
+					An Easy Solution
+				</h2>
+				<p>
+					Use Bootstrap interative builder and you even do not need to write code!
+				</p>
+				<p>
+					<a class="btn btn-primary btn-large" href="#inputcard">Try now</a>
+				</p>
+			</div>
+			<div class="row" style="display:flex">
+				<div class="col-md-4" style="align-items:stretch">
+					<div class="card" id="inputcard" style="height:100%">
+						<h5 class="card-header">
+							Input
+						</h5>
+						<div class="card-body">
+							{{inputwidget}}
+						</div>
+						<div class="card-footer">
+							Here is the input
+						</div>
+					</div>
+				</div>
+				<div class="col-md-8">
+					<div class="card">
+						<h5 class="card-header">
+							Plot Output
+						</h5>
+						<div class="card-body">
+							{{plot1}}
+						</div>
+						<div class="card-footer">
+							Here should be a plot output
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<h3 id="howto">
+						How to do this?
+					</h3>
+					<ol>
+						<li class="list-item">
+							Use Online Bootstrap Builders to build your bootstrap UI without writing any code, and leave place holder for your shiny output.
+						</li>
+						<li class="list-item">
+							Download the HTML file generated. You may need to adjust the HTML a bit like filling in pictures and adjust css of a single element.
+						</li>
+						<li class="list-item">
+							Use "htmlTemplate" in Shiny to render UI and bslib to configure bootstrap version 4 and change theme.
+						</li>
+					</ol>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<h3 id="about">
+						About
+					</h3>
+					<p>This example is a part of tutorial: Customize Shiny UI with HTML and CSS</p>
+					<p>
+						<a class="btn" href="https://www.layoutit.com/build" target="_blank">Learn More</a>
+					</p>
+				</div>
+				<div class="col-md-8">
+				  <iframe
+           src="https://www.youtube.com/embed/0W84gxCm83A"
+           title="YouTube video player" frameborder="0"
+           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+           allowfullscreen
+           style="width: 80%; aspect-ratio: 16/9; margin:3rem;"></iframe>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

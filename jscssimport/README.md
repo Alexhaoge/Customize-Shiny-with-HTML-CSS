@@ -1,0 +1,1 @@
+This example shows how to import external css and Javascript file to Shiny. If you do not understand the import files, please check installation tutorials for [Font Awesome 4](https://fontawesome.com/v4.7/get-started/) and [particle.js](https://github.com/VincentGarreau/particles.js/)

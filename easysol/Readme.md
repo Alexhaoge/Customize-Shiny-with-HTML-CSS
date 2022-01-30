@@ -1,0 +1,1 @@
+This example shows how to use interactive Bootstrap builder website to build your UI template, then fill in the placeholders with Shiny widgets, finally adjust Bootstrap theme with `bslib` and css.
