@@ -96,7 +96,7 @@ Department of Statistics
   - [Video](https://www.youtube.com/watch?v=YJCgUe5SS9M)
 - [An even easier solution!](#33)
   - [Example](http://www.alexhaoge.xyz:3838/easysol/) and [Video](https://www.youtube.com/watch?v=w-TnXXt9d2k)
-- [Browser Developer Tools](#35)
+- [Browser Developer Tools](#35) - [Video](https://www.youtube.com/watch?v=zPpYGc8qs_I)
 - [Reference](#37)
 ]
 - [All codes and slides is on Github](https://github.com/Alexhaoge/Customize-Shiny-with-HTML-CSS)
